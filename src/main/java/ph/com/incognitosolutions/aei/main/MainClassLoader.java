@@ -16,9 +16,11 @@
  */
 package ph.com.incognitosolutions.aei.main;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.UnsupportedLookAndFeelException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import ph.com.incognitosolutions.aei.view.Dashboard;
 
 /**
  *
@@ -26,20 +28,24 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class MainClassLoader {
     
+    private static EntityManagerFactory instance;
+    
     public static void main(String args[]) {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Windows".equals(info.getName())) {
-                try {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                    Logger.getLogger(MainClassLoader.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        
+        Map propertyMap = new HashMap();
+
+        propertyMap.put("javax.persistence.jdbc.user", "root");
+        propertyMap.put("javax.persistence.jdbc.password", "root");
+        propertyMap.put("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/aeinternational");
+        
+        if (instance == null) {
+            instance = Persistence.createEntityManagerFactory("aeinternational", propertyMap);
+
         }
-        System.out.println("This is initial submit!");
-        //SampleDash mainDashBoard = new SampleDash();
-        //mainDashBoard.setVisible(true);
+        
+        System.out.println("...Starting Sytem...");
+        Dashboard dashboard = new Dashboard();
+        dashboard.setVisible(true);
     }
     
 }
